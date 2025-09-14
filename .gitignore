@@ -1,5 +1,7 @@
 data/evaluations_gpt4o/
 data/spss/
+untracked/
+backup/
 
 .history
 .vscode/
