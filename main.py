@@ -1,15 +1,16 @@
-import pandas as pd
-import pyreadstat
-from pathlib import Path
-from typing import List, Set, Dict
 import logging
 import shutil
+from pathlib import Path
+from typing import Dict, List, Set
+
+import pandas as pd
+import pyreadstat
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class DataPipeline:
-    """Pipeline to remove records matching Claude missing post IDs from existing data files."""
+    """Pipeline to analyze and compare human vs LLM responses to personal queries."""
 
     def __init__(self, base_path: str = "."):
         self.base_path = Path(base_path)
@@ -18,7 +19,7 @@ class DataPipeline:
         self.backup_path = self.base_path / "backup"
 
     def load_claude_missing_postids(self, subreddit: str) -> Set[str]:
-        """Load Claude missing post IDs from audit file."""
+        """Fix analysis: Load Claude missing post IDs from audit file."""
         audit_file = self.base_path / f"{subreddit}_missing_responses_audit_full.csv"
 
         if not audit_file.exists():
@@ -39,14 +40,14 @@ class DataPipeline:
         return postids
 
     def create_backup(self, file_path: Path):
-        """Create backup of original file."""
+        """Fix analysis: Create backup of original file."""
         self.backup_path.mkdir(exist_ok=True)
         backup_file = self.backup_path / file_path.name
         shutil.copy2(file_path, backup_file)
         logger.info(f"Created backup: {backup_file}")
 
     def remove_records_from_csv(self, subreddit: str, missing_postids: Set[str]):
-        """Remove records matching missing post IDs from CSV files."""
+        """Fix analysis: Remove records matching missing post IDs from CSV files."""
         for response_source in ['llm', 'reddit']:
             csv_file = self.data_path / f"{subreddit}_evaluated_{response_source}_responses.csv"
 
@@ -78,7 +79,7 @@ class DataPipeline:
                        f"({original_count} -> {len(filtered_df)} records)")
 
     def remove_records_from_spss(self, subreddit: str, missing_postids: Set[str]):
-        """Remove records matching missing post IDs from SPSS files."""
+        """Fix analysis: Remove records matching missing post IDs from SPSS files."""
         spss_patterns = [
             f"{subreddit}_model_responses-annotated.sav",
             f"{subreddit}_reddit_responses-annotated.sav"
@@ -123,7 +124,7 @@ class DataPipeline:
                 logger.error(f"Error processing SPSS file {spss_file}: {e}")
 
     def process_subreddit(self, subreddit: str) -> Dict[str, int]:
-        """Process a single subreddit and remove matching records."""
+        """Fix analysis: Process a single subreddit and remove matching records."""
         logger.info(f"Processing subreddit: {subreddit}")
 
         # Load Claude missing post IDs
@@ -142,8 +143,8 @@ class DataPipeline:
 
         return {'missing_postids_count': len(missing_postids)}
 
-    def run_pipeline(self, subreddits: List[str] = None) -> Dict[str, Dict[str, int]]:
-        """Run the complete pipeline for specified subreddits."""
+    def run_analysis_fix(self, subreddits: List[str] = None) -> Dict[str, Dict[str, int]]:
+        """Run the Fix analysis methods for specified subreddits."""
         if subreddits is None:
             subreddits = ['AITAH', 'Anxiety']
 
@@ -167,10 +168,10 @@ def main():
     pipeline = DataPipeline()
 
     # Run pipeline for both subreddits
-    results = pipeline.run_pipeline(['AITAH', 'Anxiety'])
+    results = pipeline.run_analysis_fix(['AITAH', 'Anxiety'])
 
     # Print summary
-    print(f"\n=== Record Removal Pipeline Summary ===")
+    print("\n=== Record Removal Pipeline Summary ===")
     total_missing = 0
     for subreddit, result in results.items():
         if 'missing_postids_count' in result:
@@ -183,7 +184,7 @@ def main():
             print(f"{subreddit}: No missing post IDs to process")
 
     print(f"Total Claude missing post IDs processed: {total_missing}")
-    print(f"Backups created in: backup/")
+    print("Backups created in: backup/")
 
     return results
 
