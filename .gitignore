@@ -1,1 +1,9 @@
-data/evaluations-gpt4o/
+data/evaluations_gpt4o/
+data/spss/
+
+.history
+.vscode/
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
