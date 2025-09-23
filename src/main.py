@@ -13,7 +13,15 @@ License: Proprietary
 import argparse
 import logging
 from pathlib import Path
-import pandas as pd
+
+from langchain_anthropic import ChatAnthropic
+from langchain_openai import ChatOpenAI
+from langchain_together import ChatTogether
+from prompts.rogers_values import PCT_PROMPT_TEMPLATE, ROGERS_TRAITS
+from prompts.tof_values import TOF_PROMPT_TEMPLATE, TOF_TRAITS
+from prompts.rvs_values import RVS_PROMPT_TEMPLATE, RVS_TRAITS
+from prompts.response_generation import BASELINE_GENERATION_PROMPT
+from prompts.cot_generations import ROGERIAN_PROMPT # Remove tooling for current release.
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -32,22 +40,51 @@ class DeepReflectPipeline:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.num_posts = num_posts
         self.cot_mode = cot_mode
+        self._response_models = {
+            'claude' : ChatAnthropic(model="claude-3-5-sonnet-20241022"),
+            'gpt-4o': ChatOpenAI(model="gpt-4o"),
+            'llama31': ChatTogether(model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"),
+            'gpt-oss': ChatTogether(model="openai/gpt-oss-120b")
+         } # List of models to generate responses.
+
+        self._judge_model = ChatOpenAI(model="gpt-4o")
+        # The judge model used to evaluate the response.
+        self.paradigms = ['pct', 'tof', 'rvs']
 
     def extract_posts(data_dir = data_dir) -> None:
         pass
 
     def generate_llm_response(self, cot_mode: bool) -> None:
-        if cot_mode:
-            # The cot_mode subsystem uses chain-of-thought prompting.
-            pass
-        else:
-            pass
 
-    def load_paradigms(self) -> None:
-        pass
+        for model in self._response_models:
+                # Generate responses using each model.
+            if self.cot_mode:
+            # The cot_mode subsystem uses chain-of-thought prompting.
+                self.generation_prompt = ROGERIAN_PROMPT
+                # Invoke the chain-of-thought prompting generation method.
+            else:
+                self.generation_prompt = BASELINE_GENERATION_PROMPT
+                # Invoke the baseline generations with langchain.
 
     def annotate_responses(self) -> None:
-        pass
+
+        # Annotate the responses using the judge model and the paradigm prompts.
+        for paradigm in self.paradigms:
+            if paradigm == 'pct':
+                self.annotation_prompt = PCT_PROMPT_TEMPLATE
+                self.values_list = ROGERS_TRAITS
+            elif paradigm == 'tof':
+                self.annotation_prompt = TOF_PROMPT_TEMPLATE
+                self.values_list = TOF_TRAITS
+            elif paradigm == 'rvs':
+                self.annotation_prompt = RVS_PROMPT_TEMPLATE
+                self.values_list = RVS_TRAITS
+            else:
+                logger.warning(f"Unknown paradigm: {paradigm}")
+                continue
+
+            # Annotate each response for each paradigm.
+            pass
 
     def save_full_outputs(self) -> None:
         # Save the full outputs to the untracked folder.
