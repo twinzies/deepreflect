@@ -1,7 +1,19 @@
+# Ignore data files and directories
 data/evaluations_gpt4o/
 # data/spss/
 untracked/
 backup/
+data/spss/archive/
+data/raw_reddit/
+data/aitah/
+data/anxiety/
+data/evaluations_gpt4o/
+data/results-fix/
+data/topic_analysis-analysis2/
+results/
+
+# Helper files
+aitah_analysis.py
 
 .history
 .vscode/
