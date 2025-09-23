@@ -21,3 +21,6 @@ aitah_analysis.py
 __pycache__/
 *.pyc
 *.pyo
+
+# API keys and environment variables
+.env
