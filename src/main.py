@@ -18,6 +18,8 @@ from pathlib import Path
 
 import pandas as pd
 from dotenv import load_dotenv
+import langchain
+langchain.debug = True
 from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
 from langchain_together import ChatTogether
@@ -185,9 +187,6 @@ class DeepReflectPipeline:
 
         logger.info("Generating LLM responses...")
         self.generate_llm_response()
-
-        logger.info("Loading paradigms...")
-        self.load_paradigms()
 
         logger.info("Annotating responses...")
         self.annotate_responses()
