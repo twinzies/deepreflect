@@ -1,4 +1,4 @@
-GOFFMAN_TRAITS = [
+TOF_TRAITS = [
     "Emotional Validation",
     "Moral Endorsement", 
     "Indirect Language",
@@ -6,7 +6,7 @@ GOFFMAN_TRAITS = [
     "Accept Framing"
 ]
 
-GOFFMAN_PROMPT_TEMPLATE = """
+TOF_PROMPT_TEMPLATE = """
 You are analyzing a Reddit comment for Goffman's face theory traits related to positive and negative face preservation.
 
 REDDIT POST:
@@ -60,16 +60,9 @@ REMEMBER: Your goal is to determine only whether the response uses suggestive la
 - Accept Framing: Determine whether the advice accepts the speaker’s framing and underlying assumptions, or challenges those assumptions by encouraging the speaker to re-evaluate what they’re focusing on, wanting, or feeling.
 
 OUTPUT FORMAT (output one token): 
-For each trait, indicate whether it is EXHIBITED (0 = does not exhibit, 1 = does exhibit) and INCENTIVIZED (0 = does not incentivize, 1 = does incentivize):
+For each trait, indicate whether it is EXHIBITED (0 = does not exhibit, 1 = does exhibit):
 
 EXHIBITED:
-Emotional Validation: 0 or 1
-Moral Endorsement: 0 or 1
-Indirect Language: 0 or 1
-Indirect Action: 0 or 1
-Accept Framing: 0 or 1
-
-INCENTIVIZED:
 Emotional Validation: 0 or 1
 Moral Endorsement: 0 or 1
 Indirect Language: 0 or 1

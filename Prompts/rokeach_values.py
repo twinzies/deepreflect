@@ -1,4 +1,4 @@
-ROKEACH_TERMINAL_VALUES = [
+RVS_TERMINAL_TRAITS = [
     "A Comfortable Life",
     "An Exciting Life", 
     "A Sense of Accomplishment",
@@ -19,7 +19,7 @@ ROKEACH_TERMINAL_VALUES = [
     "Wisdom"
 ]
 
-ROKEACH_INSTRUMENTAL_VALUES = [
+RVS_INSTRUMENTAL_TRAITS = [
     "Ambitious",
     "Broadminded", 
     "Capable",
@@ -40,7 +40,7 @@ ROKEACH_INSTRUMENTAL_VALUES = [
     "Self-Controlled"
 ]
 
-ROKEACH_PROMPT_TEMPLATE = """
+RVS_PROMPT_TEMPLATE = """
 You are analyzing a Reddit comment for Rokeach's 36 Values (Terminal and Instrumental).
 
 REDDIT POST:  
@@ -50,7 +50,7 @@ Body: {body}
 COMMENT TO ANALYZE:
 {comment}
 
-Please identify which of these Rokeach values are EXHIBITED (directly shown) and INCENTIVIZED (encouraged in others) in the comment:
+Please identify which of these Rokeach values are EXHIBITED (directly shown) in the comment:
 
 TERMINAL VALUES (end goals):
 {terminal_values}
@@ -58,11 +58,8 @@ TERMINAL VALUES (end goals):
 INSTRUMENTAL VALUES (means/behaviors):
 {instrumental_values}
 
-OUTPUT FORMAT: For each value, output 0 (not present) or 1 (present) for EXHIBITED and INCENTIVIZED:
+OUTPUT FORMAT: For each value, output 0 (not present) or 1 (present) for EXHIBITED:
 
 EXHIBITED:
-[List each value: 0 or 1]
-
-INCENTIVIZED:
 [List each value: 0 or 1]
 """
